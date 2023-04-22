@@ -4,22 +4,24 @@ use std::io;
 #[derive(Parser, Debug)]
 #[clap(author, version, about, long_about = None)]
 struct Args {
-    /// the figure name. Valid values are `cow` and `stegosaurus`
+    /// the figure name. Valid values are `cow` , `stegosaurus` and 'amogus'
     #[clap(short, long)]
     figure: Option<String>,
 }
 
 // print_figure given a figure name prints it.
-// Currently accepts `cow` and `stegosaurus`.
+// Currently accepts `cow` , `stegosaurus` and 'amogus'.
 fn print_figure(figure: Option<&str>) {
-    let cow: &str = r#"        \ ^__^
+    let cow: &str =
+        r#"        \ ^__^
         \ (oo)\_______
           (__)\       )\/\
              ||----w |
              ||     ||
     "#;
 
-    let stegosaurus = r#"   \                      .       .
+    let stegosaurus =
+        r#"   \                      .       .
     \                    / ` + "`" + `.   .' "
      \           .---.  <    > <    >  .---.
       \          |    \  \ - ~ ~ - /  /    |
@@ -33,10 +35,35 @@ fn print_figure(figure: Option<&str>) {
            ~-.__|      /_ - ~ ^|      /- _      ` + "`" + `..-'
                 |     /        |     /     ~-.     ` + "`" + `-. _  _  _
                 |_____|        |_____|         ~ - . _ _ _ _ _>
+    
 
+"#;
+    let amogus =
+        r#"
+⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣠⣤⣤⣤⣤⣤⣶⣦⣤⣄⡀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⡿⠛⠉⠙⠛⠛⠛⠛⠻⢿⣿⣷⣤⡀⠀⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠀⣼⣿⠋⠀⠀⠀⠀⠀⠀⠀⢀⣀⣀⠈⢻⣿⣿⡄⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣸⣿⡏⠀⠀⠀⣠⣶⣾⣿⣿⣿⠿⠿⠿⢿⣿⣿⣿⣄⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠁⠀⠀⢰⣿⣿⣯⠁⠀⠀⠀⠀⠀⠀⠀⠈⠙⢿⣷⡄⠀
+⠀⠀⣀⣤⣴⣶⣶⣿⡟⠀⠀⠀⢸⣿⣿⣿⣆⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣷⠀
+⠀⢰⣿⡟⠋⠉⣹⣿⡇⠀⠀⠀⠘⣿⣿⣿⣿⣷⣦⣤⣤⣤⣶⣶⣶⣶⣿⣿⣿⠀
+⠀⢸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠹⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠃⠀
+⠀⣸⣿⡇⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠉⠻⠿⣿⣿⣿⣿⡿⠿⠿⠛⢻⣿⡇⠀⠀
+⠀⣿⣿⠁⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣧⠀⠀
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
+⠀⣿⣿⠀⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⣿⠀⠀
+⠀⢿⣿⡆⠀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢸⣿⡇⠀⠀
+⠀⠸⣿⣧⡀⠀⣿⣿⡇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣿⣿⠃⠀⠀
+⠀⠀⠛⢿⣿⣿⣿⣿⣇⠀⠀⠀⠀⠀⣰⣿⣿⣷⣶⣶⣶⣶⠶⠀⢠⣿⣿⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⣽⣿⡏⠁⠀⠀⢸⣿⡇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⣿⣿⠀⠀⠀⠀⠀⣿⣿⡇⠀⢹⣿⡆⠀⠀⠀⣸⣿⠇⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⢿⣿⣦⣄⣀⣠⣴⣿⣿⠁⠀⠈⠻⣿⣿⣿⣿⡿⠏⠀⠀⠀⠀
+⠀⠀⠀⠀⠀⠀⠀⠈⠛⠻⠿⠿⠿⠿⠋⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
 "#;
     if let Some("stegosaurus") = figure {
         println!("{}", stegosaurus);
+    } else if let Some("amogus") = figure {
+        println!("{}", amogus)
     } else {
         println!("{}", cow);
     }
@@ -54,7 +81,11 @@ fn tab_to_spaces(lines: &mut [String]) {
 // calculate_max_width given a slice of strings returns the length of the
 // string with max length
 fn calculate_max_width(lines: &[String]) -> usize {
-    lines.iter().map(|line| line.chars().count()).max().unwrap()
+    lines
+        .iter()
+        .map(|line| line.chars().count())
+        .max()
+        .unwrap()
 }
 
 // normalize_string_length takes a slice of strings and appends
@@ -63,13 +94,7 @@ fn calculate_max_width(lines: &[String]) -> usize {
 fn normalize_string_length(lines: Vec<String>, max_width: usize) -> Vec<String> {
     lines
         .iter()
-        .map(|line| {
-            format!(
-                "{}{}",
-                line.trim(),
-                " ".repeat(max_width - line.chars().count())
-            )
-        })
+        .map(|line| { format!("{}{}", line.trim(), " ".repeat(max_width - line.chars().count())) })
         .collect()
 }
 
@@ -88,13 +113,15 @@ fn build_balloon(lines: Vec<String>, max_width: usize) -> String {
         ret.push(format!("{} {} {}", borders[5], lines[0], borders[6]));
     } else {
         for (i, line) in lines.iter().enumerate() {
-            ret.push(if i == 0 {
-                format!("{} {} {}", borders[0], line, borders[1])
-            } else if i == n - 1 {
-                format!("{} {} {}", borders[2], line, borders[3])
-            } else {
-                format!("{} {} {}", borders[4], line, borders[4])
-            });
+            ret.push(
+                if i == 0 {
+                    format!("{} {} {}", borders[0], line, borders[1])
+                } else if i == n - 1 {
+                    format!("{} {} {}", borders[2], line, borders[3])
+                } else {
+                    format!("{} {} {}", borders[4], line, borders[4])
+                }
+            );
         }
     }
     ret.push(bottom);
